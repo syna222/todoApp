@@ -16,10 +16,18 @@ function App() {
     getCurrentList();
   }, []);
 
-  function postToDo(text){ //this has to have the field name required by the API!
+  function postToDo(text){ //has to have the field name required by the API!
     const status = false;
     axios.post("https://todoapi-fvit.onrender.com/todos", {text, status})
-    .then(response => setList(prevList => [...prevList, response.data]))  //API was programmed to return new list item
+    .then(response => setList(prevList => [...prevList, response.data]))
+    .catch(err => console.log(err))
+  }
+
+  function changeStatus(id, status){
+    status = !status;  //toggle status
+    console.log(`newStatus: ${status}`)
+    axios.put(`https://todoapi-fvit.onrender.com/todos/${id}`, {status})
+    .then(() => getCurrentList())
     .catch(err => console.log(err))
   }
 
@@ -29,10 +37,9 @@ function App() {
     .catch(err => console.log(err))
   }
 
-
   return (
     <div className="App">
-      <List todolist={list} postToDo={postToDo} deleteToDo={deleteToDo}/>
+      <List todolist={list} postToDo={postToDo} deleteToDo={deleteToDo} changeStatus={changeStatus}/>
     </div>
   );
 }

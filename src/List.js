@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-export default function List({todolist, postToDo, deleteToDo}){  //destructuring bc props are an object
+export default function List({todolist, postToDo, changeStatus, deleteToDo}){  //destruct. bc props is object
 
     const [ input, setInput ] = useState("");
     const listItemRefs = useRef([]);
@@ -10,14 +10,13 @@ export default function List({todolist, postToDo, deleteToDo}){  //destructuring
     }
 
     function handleAdd(){
-        postToDo(input);  //use prop parent method to post new item/input to API + update todolist in frontend
+        postToDo(input);
         setInput("");
     }
 
-    function handleDone(index){
+    function handleDone(index, id, status){
         listItemRefs.current[index].style.textDecoration = listItemRefs.current[index].style.textDecoration === "line-through" ? "" : "line-through";
-        //do something with list item's status via API (status false/true):
-
+        changeStatus(id, status);
     }
 
     function handleDelete(id){
@@ -33,7 +32,7 @@ export default function List({todolist, postToDo, deleteToDo}){  //destructuring
         {todolist.map((item, index) => 
             <>
             <li key={index} ref={ref => listItemRefs.current[index] = ref} style={{textDecoration: item.status === true ? "line-through" : "none"}}>{item.text}</li>
-            <button onClick={() => handleDone(index)}>done!</button>
+            <button onClick={() => handleDone(index, item._id, item.status)}>done!</button>
             <button onClick={() => handleDelete(item._id)}>delete</button>
             </>)}
         </ul>
