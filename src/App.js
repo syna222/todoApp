@@ -1,7 +1,11 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import List from "./List";
 import axios from 'axios';
+import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
+import Home from './Home';
+import Signup from './Signup';
+import Login from './Login';
+import List from "./List";
 
 function App() {
 
@@ -40,7 +44,29 @@ function App() {
 
   return (
     <div className="App">
-      <List todolist={list} postToDo={postToDo} deleteToDo={deleteToDo} changeStatus={changeStatus}/>
+      <nav>
+        <NavLink className="nav-elem" to="/">
+          HOME
+        </NavLink>
+        <NavLink className="nav-elem" to="/signup">
+          SIGN UP
+        </NavLink>
+        <NavLink className="nav-elem" to="/login">
+          LOGIN
+        </NavLink>
+        <NavLink className="nav-elem" to="/list">
+          LIST
+        </NavLink>
+        <button>
+          LOGOUT
+        </button>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />}/>
+        <Route path="/signup" element={<Signup />}/>
+        <Route path="/login" element={<Login />}/>
+        <Route path="/list" element={<List todolist={list} postToDo={postToDo} deleteToDo={deleteToDo} changeStatus={changeStatus}/>}/>
+      </Routes>
     </div>
   );
 }
