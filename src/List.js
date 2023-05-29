@@ -24,17 +24,22 @@ export default function List({todolist, postToDo, changeStatus, deleteToDo}){  /
     }
 
     return(
-    <>
-        <h1> My To-Do-List:</h1>
-        <input type="text" value={input} onChange={handleChange}/>
-        <button onClick={handleAdd}>add</button>
+    <div id="list-container">
+        <h1> MY TO-DO LIST:</h1>
+        <div id="add-container">
+            <input type="text" value={input} onChange={handleChange}/>
+            <button id="add-btn" onClick={handleAdd}>+</button>
+        </div>
+
         <ul>
         {todolist.map((item, index) => 
-            <>
-            <li key={index} ref={ref => listItemRefs.current[index] = ref} style={{textDecoration: item.status === true ? "line-through" : "none"}}>{item.text}</li>
-            <button onClick={() => handleDone(index, item._id, item.status)}>done!</button>
-            <button onClick={() => handleDelete(item._id)}>delete</button>
-            </>)}
+            <div id="list-item">
+                <li key={index} ref={ref => listItemRefs.current[index] = ref} style={{textDecoration: item.status === true ? "line-through" : "none"}}>{item.text}</li>
+                <div id="list-item-btns">
+                    <button id="done-btn" onClick={() => handleDone(index, item._id, item.status)}>&#10004;</button>
+                    <button onClick={() => handleDelete(item._id)}>&#10060;</button>
+                </div>
+            </div>)}
         </ul>
-    </>);
+    </div>);
 }

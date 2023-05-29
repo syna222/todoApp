@@ -1,3 +1,4 @@
+import './App.css';
 import { useEffect, useState } from 'react';
 import List from "./List";
 import axios from 'axios';
