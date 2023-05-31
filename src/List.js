@@ -34,8 +34,8 @@ export default function List({todolist, postToDo, changeStatus, deleteToDo}){  /
 
             <ul>
             {todolist.map((item, index) => 
-                <div id="list-item">
-                    <li key={index} ref={ref => listItemRefs.current[index] = ref} style={{textDecoration: item.status === true ? "line-through" : "none"}}>{item.text}</li>
+                <div key={index} id="list-item">
+                    <li ref={ref => listItemRefs.current[index] = ref} style={{textDecoration: item.status === true ? "line-through" : "none"}}>{item.text}</li>
                     <div id="list-item-btns">
                         <button id="done-btn" onClick={() => handleDone(index, item._id, item.status)}>&#10004;</button>
                         <button onClick={() => handleDelete(item._id)}>&#10060;</button>

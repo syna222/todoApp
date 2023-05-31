@@ -15,7 +15,13 @@ export default function Login(){
         e.preventDefault();
         //console.log(`username: ${userName}, email: ${email}, password: ${password}`);
         //an backend senden:
-
+        const URL = `https://todoapi-fvit.onrender.com/users`;
+        axios.post(URL, {
+            username: userName,
+            email: email,
+            password: password})
+            .then()
+            .catch(err => alert(err.response.data));
         inputUsernameRef.current.value = "";
         inputEmailRef.current.value = "";
         inputPasswordRef.current.value = "";

@@ -1,7 +1,10 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-export default function Login(){
+export default function Login({ setToken, setLoggedin }){
 
+    const navigate = useNavigate();
     const emailRef = useRef();
     const passwordRef = useRef();
 
@@ -12,7 +15,25 @@ export default function Login(){
         e.preventDefault(); //prevents page from reloading just now
         //console.log(`email: ${email}, password: ${password}`);
         //an backend senden:
-
+        const URL = `https://todoapi-fvit.onrender.com/login`;
+        axios.post(URL, {
+            email: email,
+            password: password
+        })
+        .then(response => {
+            //token in local storage setzen:
+            localStorage.setItem("authtoken", response.data.token) ////wenn das Posten nicht funktioniert (also kein token zurückkommt), dann springt er in den catch block und setLoggedin findet nicht statt!
+            //userdata in local storage setzen:
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            //state vars setzen:
+            setToken(response.data.token);
+            setLoggedin(true);
+            //setUser:
+            //setUser(response.data.user);
+            navigate("/");
+        
+        })
+        .catch(err => alert(err.response.data));
         emailRef.current.value = "";
         passwordRef.current.value = "";
     }
