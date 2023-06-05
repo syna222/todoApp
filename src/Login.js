@@ -21,14 +21,11 @@ export default function Login({ setUser, setToken, setLoggedin }){
             password: password
         })
         .then(response => {
-            //token in local storage setzen:
-            localStorage.setItem("authtoken", response.data.token) ////wenn das Posten nicht funktioniert (also kein token zurückkommt), dann springt er in den catch block und setLoggedin findet nicht statt!
-            //userdata in local storage setzen:
+            localStorage.setItem("authtoken", response.data.token) ////wenn das Posten mit Token-Ausgabe nicht funktioniert -> catch block + kein setLoggedIn
             localStorage.setItem("user", JSON.stringify(response.data.user));
             //state vars setzen:
             setToken(response.data.token);
             setLoggedin(true);
-            //setUser:
             setUser(response.data.user);
             navigate("/");
         

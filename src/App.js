@@ -11,16 +11,13 @@ function App() {
 
   const navigate = useNavigate();
   const [ user, setUser ] = useState(JSON.parse(localStorage.getItem("user")));
-  const [ loggedIn, setLoggedin ] = useState(false);  //gets passed down to Login component
-  const [ token, setToken ] = useState(localStorage.getItem("authtoken")); // passed down to Login component
+  const [ loggedIn, setLoggedin ] = useState(false);  //gets passed down to Login
+  const [ token, setToken ] = useState(localStorage.getItem("authtoken")); // passed down to Login
   const [ list, setList ] = useState([]);
-
-  console.log(list)
-  console.log(user)
 
   useEffect(() => {
     if (token) {
-      setLoggedin(true);  //based on token presence (in localStorage), login is kept. 
+      setLoggedin(true);  //based on token presence (in localStorage) login is kept. 
     }
   }, [token]);
 
@@ -62,7 +59,6 @@ function App() {
 
   function changeStatus(id, status){
     status = !status;  //toggle status
-    console.log(`newStatus: ${status}`)
     axios.put(`https://todoapi-fvit.onrender.com/todos/${id}`, {status}, {
       headers: {
         "authtoken": token
@@ -73,7 +69,7 @@ function App() {
   }
 
   function deleteToDo(id){ //has to have the field name required by the API!
-    axios.delete(`https://todoapi-fvit.onrender.com/todos/${id}`, {  //+ on ".../users/:id/removetodo"
+    axios.delete(`https://todoapi-fvit.onrender.com/todos/${id}`, {
       headers: {
         "authtoken": token
       }
@@ -91,20 +87,15 @@ function App() {
 
   function handleLogout(e){
     e.preventDefault();
-    if(loggedIn){           //überflüssig?
-        //token aus LocalStorage nehmen:
+    if(loggedIn){
         localStorage.removeItem("authtoken"); 
         localStorage.removeItem("user");
-        //login auf false:
         setLoggedin(false);
-        //muss setToken auf undefined?
         setUser();
         setToken();
         navigate("/");
     }
   }
-
-  console.log("logged in is:", loggedIn);
 
   return (
     <div className="App">
