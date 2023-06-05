@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export default function Login({ setToken, setLoggedin }){
+export default function Login({ setUser, setToken, setLoggedin }){
 
     const navigate = useNavigate();
     const emailRef = useRef();
@@ -29,7 +29,7 @@ export default function Login({ setToken, setLoggedin }){
             setToken(response.data.token);
             setLoggedin(true);
             //setUser:
-            //setUser(response.data.user);
+            setUser(response.data.user);
             navigate("/");
         
         })

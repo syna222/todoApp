@@ -10,9 +10,13 @@ import List from "./List";
 function App() {
 
   const navigate = useNavigate();
+  const [ user, setUser ] = useState(JSON.parse(localStorage.getItem("user")));
   const [ loggedIn, setLoggedin ] = useState(false);  //gets passed down to Login component
   const [ token, setToken ] = useState(localStorage.getItem("authtoken")); // passed down to Login component
   const [ list, setList ] = useState([]);
+
+  console.log(list)
+  console.log(user)
 
   useEffect(() => {
     if (token) {
@@ -21,15 +25,25 @@ function App() {
   }, [token]);
 
 
-  function getCurrentList(){
-    axios.get("https://todoapi-fvit.onrender.com/todos")
-    .then(response => setList(response.data))
-    .catch(err => console.log(err))
+  function getCurrentList(){  //müsste hier user neu fetchen + in localStorage setzen + setList(user.todos), wenn auth token noch da
+    if(user){
+      axios.get(`https://todoapi-fvit.onrender.com/users/${user._id}`)
+      .then((response) => {
+        console.log("aus getCurrentList():", response.data);
+        //set in localStorage + state var user?
+        localStorage.setItem("user", JSON.stringify(response.data));
+        setUser(response.data);
+        setList(user.todos)  //is this too early? alternatively: setList(JSON.parse(localStorage.getItem("user"))).todos
+      })
+      .catch(err => console.log(err));
+    }
+
   }
 
   useEffect(() => {
     getCurrentList();
-  }, []);
+    console.log("unmount and mount.")
+  }, []); //so when user changes, list changes... prev: [user]
 
   function postToDo(text){ //has to have the field name required by the API!
     const status = false;
@@ -38,7 +52,15 @@ function App() {
         "authtoken": token
       }
     })
-    .then(response => setList(prevList => [...prevList, response.data]))
+    .then(response => {
+      const todoid = response.data._id;
+      axios.put(`https://todoapi-fvit.onrender.com/users/${user._id}/addtodo`, {todoid: todoid}, {
+        headers: {
+          "authtoken": token
+        }
+      })
+      .then(() => {getCurrentList()}) //
+      })
     .catch(err => console.log(err))
   }
 
@@ -55,7 +77,7 @@ function App() {
   }
 
   function deleteToDo(id){
-    axios.delete(`https://todoapi-fvit.onrender.com/todos/${id}`, {
+    axios.delete(`https://todoapi-fvit.onrender.com/todos/${id}`, {  //THIS ONE NEEDS TO CHANGE (TO USER-BASED)?
       headers: {
         "authtoken": token
       }
@@ -73,6 +95,7 @@ function App() {
         //login auf false:
         setLoggedin(false);
         //muss setToken auf undefined?
+        setUser();
         setToken();
         navigate("/");
     }
@@ -102,7 +125,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/signup" element={<Signup />}/>
-        <Route path="/login" element={<Login setToken={setToken} setLoggedin={setLoggedin}/>}/>
+        <Route path="/login" element={<Login setUser={setUser} setToken={setToken} setLoggedin={setLoggedin}/>}/>
         <Route path="/list" element={<List todolist={list} postToDo={postToDo} deleteToDo={deleteToDo} changeStatus={changeStatus}/>}/>
       </Routes>
     </div>
