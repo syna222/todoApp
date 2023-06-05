@@ -72,13 +72,20 @@ function App() {
     .catch(err => console.log(err))
   }
 
-  function deleteToDo(id){
-    axios.delete(`https://todoapi-fvit.onrender.com/todos/${id}`, {  //THIS ONE NEEDS TO CHANGE (TO USER-BASED)?
+  function deleteToDo(id){ //has to have the field name required by the API!
+    axios.delete(`https://todoapi-fvit.onrender.com/todos/${id}`, {  //+ on ".../users/:id/removetodo"
       headers: {
         "authtoken": token
       }
     })
-    .then(() => getCurrentList())
+    .then(() => {
+      axios.put(`https://todoapi-fvit.onrender.com/users/${user._id}/removetodo`, {todoid: id}, {
+        headers: {
+          "authtoken": token
+        }
+      })
+      .then(() => getCurrentList())
+      })
     .catch(err => console.log(err))
   }
 
