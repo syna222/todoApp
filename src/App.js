@@ -25,25 +25,21 @@ function App() {
   }, [token]);
 
 
-  function getCurrentList(){  //müsste hier user neu fetchen + in localStorage setzen + setList(user.todos), wenn auth token noch da
+  function getCurrentList(){
     if(user){
       axios.get(`https://todoapi-fvit.onrender.com/users/${user._id}`)
       .then((response) => {
-        console.log("aus getCurrentList():", response.data);
-        //set in localStorage + state var user?
         localStorage.setItem("user", JSON.stringify(response.data));
         setUser(response.data);
-        setList(user.todos)  //is this too early? alternatively: setList(JSON.parse(localStorage.getItem("user"))).todos
+        setList(JSON.parse(localStorage.getItem("user")).todos) //setList(user.todos) would be too early in code
       })
       .catch(err => console.log(err));
     }
-
   }
 
   useEffect(() => {
     getCurrentList();
-    console.log("unmount and mount.")
-  }, []); //so when user changes, list changes... prev: [user]
+  }, [loggedIn]);
 
   function postToDo(text){ //has to have the field name required by the API!
     const status = false;
@@ -59,7 +55,7 @@ function App() {
           "authtoken": token
         }
       })
-      .then(() => {getCurrentList()}) //
+      .then(() => getCurrentList())
       })
     .catch(err => console.log(err))
   }
