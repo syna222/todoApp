@@ -1,4 +1,4 @@
-Hosted on: https://mytodolist-jnfe.onrender.com
+Hosted on: https://mytodolist-jnfe.onrender.com (backend/API also created by me but set to private)
 
 
 # Getting Started with Create React App
