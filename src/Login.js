@@ -4,6 +4,8 @@ import axios from 'axios';
 
 export default function Login({ setUser, setToken, setLoggedin }){
 
+    const baseURL = process.env.REACT_APP_API_BASE_URL;
+
     const navigate = useNavigate();
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -15,7 +17,7 @@ export default function Login({ setUser, setToken, setLoggedin }){
         e.preventDefault(); //prevents page from reloading just now
         //console.log(`email: ${email}, password: ${password}`);
         //an backend senden:
-        const URL = `https://todoapi-fvit.onrender.com/login`;
+        const URL = `${baseURL}/login`;
         axios.post(URL, {
             email: email,
             password: password

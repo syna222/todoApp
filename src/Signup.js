@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export default function Login(){
 
+    const baseURL = process.env.REACT_APP_API_BASE_URL;
+
     const inputUsernameRef = useRef();  //for clearing inputs
     const inputEmailRef = useRef();
     const inputPasswordRef = useRef();
@@ -15,7 +17,7 @@ export default function Login(){
         e.preventDefault();
         //console.log(`username: ${userName}, email: ${email}, password: ${password}`);
         //an backend senden:
-        const URL = `https://todoapi-fvit.onrender.com/users`;
+        const URL = `${baseURL}/users`;
         axios.post(URL, {
             username: userName,
             email: email,

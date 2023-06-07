@@ -10,6 +10,7 @@ import List from "./List";
 function App() {
 
   const navigate = useNavigate();
+  const baseURL = process.env.REACT_APP_API_BASE_URL;
   const [ user, setUser ] = useState(JSON.parse(localStorage.getItem("user")));
   const [ loggedIn, setLoggedin ] = useState(false);  //gets passed down to Login
   const [ token, setToken ] = useState(localStorage.getItem("authtoken")); // passed down to Login
@@ -24,7 +25,7 @@ function App() {
 
   function getCurrentList(){
     if(user){
-      axios.get(`https://todoapi-fvit.onrender.com/users/${user._id}`)
+      axios.get(`${baseURL}/users/${user._id}`)
       .then((response) => {
         localStorage.setItem("user", JSON.stringify(response.data));
         setUser(response.data);
@@ -40,14 +41,14 @@ function App() {
 
   function postToDo(text){ //has to have the field name required by the API!
     const status = false;
-    axios.post("https://todoapi-fvit.onrender.com/todos", {text, status}, {
+    axios.post(`${baseURL}/todos`, {text, status}, {
       headers: {
         "authtoken": token
       }
     })
     .then(response => {
       const todoid = response.data._id;
-      axios.put(`https://todoapi-fvit.onrender.com/users/${user._id}/addtodo`, {todoid: todoid}, {
+      axios.put(`${baseURL}/users/${user._id}/addtodo`, {todoid: todoid}, {
         headers: {
           "authtoken": token
         }
@@ -59,7 +60,7 @@ function App() {
 
   function changeStatus(id, status){
     status = !status;  //toggle status
-    axios.put(`https://todoapi-fvit.onrender.com/todos/${id}`, {status}, {
+    axios.put(`${baseURL}/todos/${id}`, {status}, {
       headers: {
         "authtoken": token
       }
@@ -69,13 +70,13 @@ function App() {
   }
 
   function deleteToDo(id){ //has to have the field name required by the API!
-    axios.delete(`https://todoapi-fvit.onrender.com/todos/${id}`, {
+    axios.delete(`${baseURL}/todos/${id}`, {
       headers: {
         "authtoken": token
       }
     })
     .then(() => {
-      axios.put(`https://todoapi-fvit.onrender.com/users/${user._id}/removetodo`, {todoid: id}, {
+      axios.put(`${baseURL}/users/${user._id}/removetodo`, {todoid: id}, {
         headers: {
           "authtoken": token
         }
